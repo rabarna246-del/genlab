@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenLab</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* SPLASH */
+#splash {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #0a0f0a;
+    overflow: hidden;
+    z-index: 9999;
+}
+
+.square {
+    position: absolute;
+    opacity: 0.95;
+    border-radius: 6px;
+}
+
+/* MAIN */
+#main {
+    display: none;
+    height: 100vh;
+    background: linear-gradient(135deg, #0b120b, #1f2a1f, #3B5323);
+    color: #e8f0e8;
+    overflow: hidden;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 40px;
+    font-size: 14px;
+}
+
+.hero {
+    position: relative;
+    height: 100vh;
+    padding: 40px;
+}
+
+.hero h1 {
+    font-size: 110px;
+    font-weight: 300;
+}
+
+.subtitle {
+    margin-top: 20px;
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+.btn {
+    position: absolute;
+    top: 120px;
+    right: 40px;
+    padding: 10px 20px;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.left-text {
+    position: absolute;
+    bottom: 80px;
+    left: 40px;
+    max-width: 320px;
+}
+
+.right-text {
+    position: absolute;
+    top: 180px;
+    right: 40px;
+    font-size: 12px;
+    text-align: right;
+}
+
+/* CENTER */
+#canvas-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -40%);
+    width: 450px;  /* increased size */
+    height: 450px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ROTATING IMAGE */
+#logo-image {
+    width: 110%;
+    height: auto;
+    object-fit: contain;
+    display: none;
+    animation: spin 4s linear infinite;
+}
+
+/* COUNTERCLOCKWISE ROTATION */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+}
+</style>
+</head>
+
+<body>
+
+<div id="splash"></div>
+
+<div id="main">
+
+    <div class="navbar">
+        <div>☰ MENU</div>
+        <div>GenLab</div>
+        <div>CONTACT</div>
+    </div>
+
+    <section class="hero">
+        <h1>GenLab</h1>
+        <div class="subtitle">CONNECT • CHAT • CREATE</div>
+        <div class="btn">REQUEST ACCESS</div>
+
+        <div id="canvas-container">
+            <img id="logo-image" src="img.png" alt="Logo">
+        </div>
+
+        <div class="left-text">
+            <h2>Build Bold.<br>Think Gen Z.</h2>
+            <p>
+                WE DESIGN VIRAL BRANDS, BUILD AI SYSTEMS,
+                AND LAUNCH CREATORS INTO THE FUTURE.
+            </p>
+        </div>
+
+        <div class="right-text">
+            FROM IDEA —<br>
+            TO INTERNET IMPACT.
+        </div>
+    </section>
+
+</div>
+
+<script>
+
+/* SPLASH */
+const splash = document.getElementById("splash");
+let squares = [];
+
+const colors = ["#1f2a1f","#2f3f2f","#3B5323","#556B2F","#6B8E23"];
+const centerX = window.innerWidth / 2;
+const centerY = window.innerHeight / 2;
+
+for (let i = 0; i < 8; i++) {
+    const sq = document.createElement("div");
+    sq.classList.add("square");
+
+    let size = 120 + i * 90;
+
+    sq.style.width = size + "px";
+    sq.style.height = size + "px";
+    sq.style.background = colors[i % colors.length];
+
+    sq.style.left = (centerX - size / 2) + "px";
+    sq.style.top = (centerY - size / 2) + "px";
+
+    splash.appendChild(sq);
+    squares.push(sq);
+}
+
+let progress = 0;
+
+function animateSplash() {
+    progress += 0.02;
+
+    squares.forEach((sq, index) => {
+        let zoom = 1 + progress * (index * 0.18);
+        sq.style.transform = `scale(${zoom})`;
+        sq.style.opacity = 1 - progress * 0.25;
+    });
+
+    if (progress < 1.4) requestAnimationFrame(animateSplash);
+}
+
+animateSplash();
+
+setTimeout(() => {
+    squares.forEach(sq => {
+        sq.style.transform = "scale(0)";
+        sq.style.opacity = "0";
+    });
+
+    setTimeout(() => {
+        splash.style.opacity = 0;
+        document.getElementById("main").style.display = "block";
+
+        setTimeout(() => {
+            splash.remove();
+            showImage();
+        }, 800);
+
+    }, 600);
+
+}, 1800);
+
+
+/* SHOW IMAGE */
+function showImage() {
+    document.getElementById("logo-image").style.display = "block";
+}
+
+</script>
+
+</body>
+</html>
